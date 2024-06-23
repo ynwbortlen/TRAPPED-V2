@@ -1,5 +1,5 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "TRAPPED", HidePremium = false, SaveConfig = true, ConfigFolder = "TRAPPED"})
+local Window = OrionLib:MakeWindow({Name = "TRAPPED V2", HidePremium = false, SaveConfig = true, ConfigFolder = "TRAPPEDV2"})
 
 
 local Tab = Window:MakeTab({
@@ -2905,7 +2905,5 @@ STab:AddButton({
   	end    
 })
 
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
+
+OrionLib:Init()
