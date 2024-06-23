@@ -2468,12 +2468,6 @@ XTab:AddButton({
 })
 
 
-Tab:AddButton({
-	Name = "ANTI BAG",
-	Callback = function()
-		game.Players.LocalPlayer.Character["Christmas_Sock"]:Destroy()
-  	end    
-})
 
 --[[
 Name = <string> - The name of the button.
