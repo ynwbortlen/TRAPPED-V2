@@ -508,11 +508,10 @@ Callback = <function> - The function of the button.
 ]]
 
 Tab:AddButton({
-	Name = "Trash Talk",
+	Name = "Trash Talk(J)",
 	Callback = function()
 		local words = {
 			'ur bad',
-			'seed',
 			'im not locking ur just bad',
 			'clown',
 			'sonned',
@@ -2890,20 +2889,144 @@ Callback = <function> - The function of the button.
 ]]
 
 
-
-
-local STab = Window:MakeTab({
-	Name = "Support",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
-
-STab:AddButton({
-	Name = "Therealosdee",
+Tab:AddButton({
+	Name = "Inf Stamina",
 	Callback = function()
-		
+		local LP = game.Players.LocalPlayer
+
+		function InfStamina(Character)
+			Character:WaitForChild'BodyEffects'
+			game:GetService('RunService').Stepped:Connect(function()
+				pcall(function()
+					LP.Character.BodyEffects.Movement:ClearAllChildren()
+					LP.Character.BodyEffects.Reload.Value = false
+					LP.Character.BodyEffects.Defense.Value = 9e9
+				end)
+			end)
+		end
+		InfStamina(game.Players.LocalPlayer.Character)
+		game.Players.LocalPlayer.CharacterAdded:Connect(InfStamina)
   	end    
 })
 
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
+
+Tab:AddButton({
+	Name = "Free Fist (Q)",
+	Callback = function()
+      		-- // Variables
+	local localPlayer       = game:GetService("Players").LocalPlayer
+	local localCharacter    = localPlayer.Character
+	local Mouse             = localPlayer:GetMouse()
+	local FistControl       = false
+	local LeftFist          = localCharacter.LeftHand
+	local RightFist         = localCharacter.RightHand
+
+	-- // Services
+	local uis = game:GetService("UserInputService")
+
+	-- // Coroutine Loop + Functions
+	local loopFunction = function()
+		LeftFist.CFrame  = CFrame.new(Mouse.Hit.p)
+		RightFist.CFrame = CFrame.new(Mouse.Hit.p)
+	end
+
+	local Loop
+
+	local Start = function()
+		Loop = game:GetService("RunService").Heartbeat:Connect(loopFunction)
+	end
+
+	local Pause = function()
+		Loop:Disconnect()
+	end
+
+	-- // Hotkeys
+	uis.InputBegan:connect(function(Key)
+		if (Key.KeyCode == Enum.KeyCode.Q) then
+			if (FistControl == false) then
+				FistControl = true
+				Start()
+				pcall(function()
+					localCharacter.RightHand.RightWrist:Remove()
+					localCharacter.LeftHand.LeftWrist:Remove()
+				end)
+			elseif (FistControl == true) then
+				FistControl = false
+				Pause()
+				local rightwrist  = Instance.new("Motor6D")
+				rightwrist.Name   = "RightWrist"
+				rightwrist.Parent = localCharacter.RightHand
+				rightwrist.C0     = CFrame.new(1.18422506e-07, -0.5009287, -6.81715525e-18, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+				rightwrist.C1     = CFrame.new(3.55267503e-07, 0.125045404, 5.92112528e-08, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+				rightwrist.Part0  = localCharacter.RightLowerArm
+				rightwrist.Part1  = localCharacter.RightHand
+
+				local leftwrist   = Instance.new("Motor6D")
+				leftwrist.Name    = "LeftWrist"
+				leftwrist.Parent  = localCharacter.LeftHand
+				leftwrist.C0      = CFrame.new(0.000475466368, -0.5009287, 7.59417072e-20, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+				leftwrist.C1      = CFrame.new(0.000475821638, 0.125045404, 5.92112528e-08, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+				leftwrist.Part0   = localCharacter.LeftLowerArm
+				leftwrist.Part1   = localCharacter.LeftHand
+			end
+		end
+	end)
+  	end   
+})
+
+Tab:AddButton({
+	Name = "Auto Armor (TP ON 30%)",
+	Callback = function()
+		local PERCENT_TO_BUY_ARMOR   = 30       --\\ percent of armor left that u want to buy
+		local COMMAND_TO_STOP_BUYING = ('/e stop you') --\\ message to stop buying
+		
+		------------------------
+		------------------------
+		
+		function announce(title,text,time)
+			game.StarterGui:SetCore("SendNotification", {
+				Title = title;
+				Text = text;
+				Duration = time;
+			})
+		end
+		announce('Autobuying armor at %' .. tostring(PERCENT_TO_BUY_ARMOR), 'chat ' .. COMMAND_TO_STOP_BUYING .. ' to stop', 8)
+		
+		local Stopped = false
+		local Player = game.Players.LocalPlayer
+		function Main1()
+			while wait() do
+				local function AutoArmor()
+					local Origin = Player.Character.HumanoidRootPart.CFrame
+					local Armor = Player.Character.BodyEffects.Armor
+					if Armor.Value <= PERCENT_TO_BUY_ARMOR and Stopped == false then
+						repeat
+							wait()    
+							Player.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Ignored.Shop["[Medium Armor] - $1000"].Head.CFrame
+							fireclickdetector(game:GetService("Workspace").Ignored.Shop["[Medium Armor] - $1000"].ClickDetector)
+						until Armor.Value == 100 or Player.DataFolder.Currency.Value < 1000
+						Player.Character.HumanoidRootPart.CFrame = Origin
+					end
+				end
+				local s,e = pcall(AutoArmor)
+			end
+		end
+		function Main2()
+			Player.Chatted:Connect(function(msg)
+				if msg == COMMAND_TO_STOP_BUYING and Stopped == false then
+					Stopped = true
+					announce('stopped buying', '',5)
+				end
+			end)
+		end
+		coroutine.resume(coroutine.create(Main1))
+		coroutine.resume(coroutine.create(Main2))
+  	end    
+})
 
 OrionLib:Init()
+
